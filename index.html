@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#000000">
+
+<title>Student QR Scanner</title>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+</head>
+
+<body>
+
+<h2>Student QR Scanner</h2>
+
+<button onclick="startScanner()">Start Scanner</button>
+
+<div id="reader" style="width:300px"></div>
+
+<script>
+
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyJ7orYS8FDnP7cOGiusdH5QIYJu5Y-J2BkiyzjwCyo1w9IQMTs3W3d0n1MIKb0iSJL/exec";
+
+function startScanner(){
+
+  const html5QrCode = new Html5Qrcode("reader");
+
+  html5QrCode.start(
+    { facingMode: "environment" },
+    {
+      fps: 10,
+      qrbox: 250
+    },
+    async (decodedText) => {
+
+      alert("QR detected: " + decodedText);
+
+      const response = await fetch(GAS_URL);
+
+      const result = await response.text();
+
+      alert("Server response: " + result);
+
+    },
+    (errorMessage) => {}
+
+  );
+
+}
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js");
+}
+
+</script>
+
+</body>
+  </html>
